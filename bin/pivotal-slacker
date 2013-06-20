@@ -257,7 +257,7 @@ def define_commands
       story_id = normalize_story_id(args[0].to_i)
 
       story = $project.stories.find(story_id)
-      result = story.update :estimate => options.points
+      story.update :estimate => options.points
 
       puts Formatter.story_action("estimated", story.id, story.name) + "."
     end
@@ -413,7 +413,7 @@ command :shell do |c|
       end
 
       begin
-        command.run *argv
+        command.run(*argv)
       rescue Exception => e
         puts e
       end

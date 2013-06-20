@@ -10,7 +10,7 @@ class AppConfig
     config = nil
     begin
       config = YAML.load_file FILENAME
-    rescue Exception => e
+    rescue Exception
       raise "No #{FILENAME} file found in current directory; please create one."
     end
     
