@@ -87,7 +87,7 @@ end
 
 # Shared functionality for outputting lists of stories (e.g. for `mine`, `started`, etc.).
 # Handles menuing functionality if opts[:menu] is `true`.
-def output_story_list opts={:project => nil, :states => [], :owned_by => nil, :menu => false}
+def output_story_list opts={:project => nil, :states => [], :owned_by => nil, :menu => false, :verbose => false}
   puts "Looking for stories owned by #{opts[:owned_by]} in states: #{opts[:states]}".color("#444444")
 
   stories = opts[:project].stories.all(:owned_by => opts[:owned_by], :current_state => opts[:states])
@@ -100,6 +100,7 @@ def output_story_list opts={:project => nil, :states => [], :owned_by => nil, :m
     requested_by = Formatter.requested_by(story.requested_by)
     created_at = Formatter.time_ago(story.created_at)
     story_type = Formatter.story_type(story.story_type)
+    description = Formatter.description(story.description)
 
     labels = Formatter.label(story.labels.gsub(/,/, ", ")) if not story.labels.nil?
     labels = " #{labels}" if labels != ""
@@ -113,6 +114,11 @@ def output_story_list opts={:project => nil, :states => [], :owned_by => nil, :m
     end
 
     puts "#{menu_output}[#{id}] #{name}#{labels}  ~  #{state} #{story_type}, from #{requested_by}, created #{created_at}"
+
+    if opts[:verbose]
+      puts "#{description}"
+      puts ""
+    end
   end
 end
 
@@ -123,6 +129,8 @@ end
 # Command-line interaction functionality
 
 def define_commands
+  global_option('--verbose') { $verbose = true }
+
   command :mine do |c|
     c.syntax = "pivotal-slacker mine"
     c.description = "List your stories in Pivotal Tracker."
@@ -131,8 +139,7 @@ def define_commands
     c.action do |args, options|
       states = %w{unstarted started finished rejected unscheduled}
       owned_by = $config.user
-
-      output_story_list :project => $project, :states => states, :owned_by => owned_by, :menu => options.menu
+      output_story_list :project => $project, :states => states, :owned_by => owned_by, :menu => options.menu, :verbose => $verbose
     end
   end
 
@@ -144,7 +151,7 @@ def define_commands
       states = %w{accepted}
       owned_by = $config.user
 
-      output_story_list :project => $project, :states => states, :owned_by => owned_by
+      output_story_list :project => $project, :states => states, :owned_by => owned_by, :verbose => $verbose
     end
   end
 
@@ -156,7 +163,7 @@ def define_commands
       states = %w{started}
       owned_by = $config.user
 
-      output_story_list :project => $project, :states => states, :owned_by => owned_by
+      output_story_list :project => $project, :states => states, :owned_by => owned_by, :verbose => $verbose
     end
   end
 
@@ -168,7 +175,7 @@ def define_commands
       states = %w{unstarted}
       owned_by = $config.user
 
-      output_story_list :project => $project, :states => states, :owned_by => owned_by
+      output_story_list :project => $project, :states => states, :owned_by => owned_by, :verbose => $verbose
     end
   end
 

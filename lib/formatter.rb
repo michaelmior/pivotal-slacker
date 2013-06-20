@@ -2,6 +2,13 @@
 require "rubygems"
 require "rainbow"
 
+class String
+  # Returns an indented string, all lines of string will be indented with count of chars
+  def indent(char, count)
+    (char * count) + gsub(/(\n+)/) { $1 + (char * count) }
+  end
+end
+
 class Formatter
   def self.story_id id
     id.to_s.color("#404040")
@@ -60,7 +67,7 @@ class Formatter
   end
   
   def self.description description
-    description
+    description.indent(" ", 4)
   end
   
   def self.iteration iteration
