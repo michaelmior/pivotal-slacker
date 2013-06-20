@@ -11,7 +11,11 @@ class AppConfig
     begin
       config = YAML.load_file FILENAME
     rescue Exception
-      raise "No #{FILENAME} file found in current directory; please create one."
+      begin
+        config = YAML.load_file File.expand_path("~/" + FILENAME)
+      rescue Exception
+        raise "No #{FILENAME} file found in current directory; please create one."
+      end
     end
     
     AppConfig.new :config => config
