@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
   s.add_dependency "actionpack"
   s.add_dependency "launchy"
   s.add_dependency "commander"
+  s.add_dependency "activeresource"
   s.files       = ["lib/formatter.rb", "lib/app_config.rb"]
   s.executables << "pivotal-slacker"
   s.homepage    =
