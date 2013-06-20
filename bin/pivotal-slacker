@@ -360,6 +360,8 @@ def define_commands
       end
     end
   end
+
+  default_command :help
 end
 
 define_commands
